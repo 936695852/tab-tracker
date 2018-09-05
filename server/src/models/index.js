@@ -11,18 +11,26 @@ const sequelize = new Sequelize(
   config.db.options
 )
 
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.')
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err)
+  })
+
 fs
   .readdirSync(__dirname)
-  .filter((file) => {
-    return file !== 'index.js'
-  })
+  .filter((file) =>
+    file !== 'index.js'
+  )
   .forEach((file) => {
-    debugger
     const model = sequelize.import(path.join(__dirname, file))
+    console.log('model ' + model)
     db[model.name] = model
   })
 
 db.sequelize = sequelize
 db.Sequelize = Sequelize
-
 module.exports = db
